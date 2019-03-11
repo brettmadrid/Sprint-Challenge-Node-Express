@@ -44,4 +44,15 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
+router.put("/:id", async (req, res) => {
+  try {
+    const updated = await Actions.update(req.params.id, req.body);
+    updated
+      ? res.status(200).json(updated)
+      : res.status(404).json({ message: "The post cannot be found!" });
+  } catch (error) {
+    res.status(500).json({ message: "Post info could not be modified" });
+  }
+});
+
 module.exports = router;
