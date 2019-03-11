@@ -1,10 +1,10 @@
 const express = require("express");
-//const cors = require("cors");
+const cors = require("cors");
 
 const Actions = require("./actionModel.js");
 
 const router = express.Router();
-//router.use(cors());
+router.use(cors());
 
 router.get("/", async (req, res) => {
   try {
