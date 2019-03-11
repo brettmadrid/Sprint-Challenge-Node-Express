@@ -2,6 +2,7 @@ const express = require("express");
 //const cors = require("cors");
 
 const Projects = require("./projectModel.js");
+const Actions = require("./actionModel.js");
 
 const router = express.Router();
 //router.use(cors());
@@ -35,6 +36,26 @@ router.post("/", async (req, res) => {
   } catch (error) {
     res.status(500).json({
       message: "Error adding the the project."
+    });
+  }
+});
+
+router.delete("/:id", async (req, res) => {
+  try {
+    // first check to see if user id exists
+    const id = req.params.id;
+    const project = await Projects.get(id);
+
+    if (project) {
+      await Actions.removeProjectActions(id);
+      await Projects.remove(id);
+      res.status(200).json({removed: project});
+    } else {
+      res.status(404).json({ err: "The id of the project could not be found" });
+    }
+  } catch (error) {
+    res.status(500).json({
+      err: "Error removing the project. Check to see if project exists!"
     });
   }
 });
