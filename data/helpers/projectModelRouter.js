@@ -14,9 +14,9 @@ router.get("/", async (req, res) => {
   } catch (error) {
     res.status(500).json({
       message: "Error retrieving projects"
-    });
+    })
   }
-});
+})
 
 router.get("/:id", async (req, res) => {
   try {
@@ -43,8 +43,7 @@ router.post("/", async (req, res) => {
 router.delete("/:id", async (req, res) => {
   try {
     // first check to see if user id exists
-    const id = req.params.id;
-    const project = await Projects.get(id);
+    const project = await Projects.get(req.params.id);
 
     if (project) {
       await Actions.removeProjectActions(id);
@@ -63,7 +62,7 @@ router.delete("/:id", async (req, res) => {
 router.put("/:id", async (req, res) => {
   try {
     const updatedProject = await Projects.update(req.params.id, req.body);
-    
+
     if (updatedProject) {
       res.status(200).json(updatedProject);
     } else {
@@ -72,6 +71,26 @@ router.put("/:id", async (req, res) => {
   } catch (error) {
     res.status(500).json({
       message: "Error updating the project"
+    });
+  }
+});
+
+// Post new action only if valid user ID exists
+router.post("/:id/actions", async (req, res) => {
+  try {
+    // make sure valid user
+    const project = await Projects.get(req.params.id);
+
+    if (project) {
+      const newAction = { ...req.body, project_id: req.params.id };
+      const action = await Actions.insert(newAction);
+      res.status(201).json(action);
+    } else {
+      res.status(404).json({ message: "Project id not found - cannot add action" });
+    }
+  } catch (error) {
+    res.status(500).json({
+      message: "Error adding the action."
     });
   }
 });
