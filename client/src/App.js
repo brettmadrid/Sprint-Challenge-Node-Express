@@ -27,7 +27,7 @@ function App() {
         />
         <Route
         exact
-        path="/api/projects/:id"
+        path="/api/projects/:id/actions"
         render={props => <ActionCards {...props} projects={projects} />}
       />
       </div>
