@@ -14,14 +14,25 @@ router.get("/", async (req, res) => {
   } catch (error) {
     res.status(500).json({
       message: "Error retrieving projects"
-    })
+    });
   }
-})
+});
 
 router.get("/:id", async (req, res) => {
   try {
     const project = await Projects.get(req.params.id);
     res.status(200).json(project);
+  } catch (error) {
+    res.status(500).json({
+      message: "Error retrieving the project"
+    });
+  }
+});
+
+router.get("/:id/actions", async (req, res) => {
+  try {
+    const actions = await Projects.getProjectActions(req.params.id);
+    res.status(200).json(actions);
   } catch (error) {
     res.status(500).json({
       message: "Error retrieving the project"
@@ -48,7 +59,7 @@ router.delete("/:id", async (req, res) => {
     if (project) {
       await Actions.removeProjectActions(id);
       await Projects.remove(id);
-      res.status(200).json({removed: project});
+      res.status(200).json({ removed: project });
     } else {
       res.status(404).json({ err: "The id of the project could not be found" });
     }
@@ -86,7 +97,9 @@ router.post("/:id/actions", async (req, res) => {
       const action = await Actions.insert(newAction);
       res.status(201).json(action);
     } else {
-      res.status(404).json({ message: "Project id not found - cannot add action" });
+      res
+        .status(404)
+        .json({ message: "Project id not found - cannot add action" });
     }
   } catch (error) {
     res.status(500).json({
