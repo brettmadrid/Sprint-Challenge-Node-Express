@@ -28,4 +28,20 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+router.delete("/:id", async (req, res) => {
+  try {
+    const action = await Actions.remove(req.params.id);
+
+    if (action) {
+      res.status(200).json({ message: "The action has been deleted" });
+    } else {
+      res.status(404).json({ message: "The id could not be found" });
+    }
+  } catch (error) {
+    res.status(500).json({
+      message: "Error removing the action"
+    });
+  }
+});
+
 module.exports = router;
