@@ -32,4 +32,9 @@ module.exports = {
       .where('id', id)
       .del();
   },
+  removeProjectActions: function(project_id) {
+    return db('actions')
+    .where('project_id', project_id)
+    .del()
+  }
 };
